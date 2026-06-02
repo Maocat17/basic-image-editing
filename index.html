@@ -535,6 +535,7 @@
 
                                     fitToScreen();
                                     updateSysUI();
+                                    updateExportButtons();
                                     requestRender();
 
                                     // 可選：顯示提示
@@ -696,11 +697,16 @@
         function updateSysUI() {
             document.getElementById('btn-undo').disabled = historyStep < 0;
             document.getElementById('btn-redo').disabled = historyStep >= history.length - 1;
+            updateExportButtons(); // ← 使用新函式
+            document.getElementById('welcome-msg').style.display = !!img ? 'none' : 'flex';
+            document.getElementById('zoom-val').textContent = Math.round(view.scale * 100) + '%';
+        }
+
+        // 新增：統一更新匯出與複製按鈕狀態
+        function updateExportButtons() {
             const hasImg = !!img;
             document.getElementById('btn-export').disabled = !hasImg;
-            document.getElementById('btn-copy').disabled = !hasImg; // ← 新增這一行 
-            document.getElementById('welcome-msg').style.display = hasImg ? 'none' : 'flex';
-            document.getElementById('zoom-val').textContent = Math.round(view.scale * 100) + '%';
+            document.getElementById('btn-copy').disabled = !hasImg;
         }
 
         // --- 檔案與字型上傳 ---
@@ -725,6 +731,7 @@
                     selectedObj = null;
                     fitToScreen();
                     updateSysUI();
+                    updateExportButtons();
                 };
                 newImg.src = event.target.result;
             };
