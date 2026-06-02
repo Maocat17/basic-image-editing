@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,48 +9,111 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class', 
-            theme: { extend: {} }
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
         }
     </script>
     <!-- 引入 Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        body { margin: 0; overflow: hidden; font-family: sans-serif; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
-        
-        #text-input-container { display: none; position: absolute; z-index: 50; }
-        #text-input { 
-            background: transparent; border: 1px dashed #3b82f6; outline: none; 
-            padding: 4px; margin: 0; min-width: 50px; min-height: 1em;
-            white-space: pre-wrap; word-break: break-word; cursor: text;
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
         }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        #text-input-container {
+            display: none;
+            position: absolute;
+            z-index: 50;
+        }
+
+        #text-input {
+            background: transparent;
+            border: 1px dashed #3b82f6;
+            outline: none;
+            padding: 4px;
+            margin: 0;
+            min-width: 50px;
+            min-height: 1em;
+            white-space: pre-wrap;
+            word-break: break-word;
+            cursor: text;
+        }
+
         #text-input:empty:before {
             content: attr(data-placeholder);
             color: #888;
             pointer-events: none;
             display: block;
         }
-        
-        .tool-btn { 
-            display: flex; align-items: center; justify-content: center; 
-            width: 40px; height: 40px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .tool-btn.active { background-color: #3b82f6 !important; color: white !important; }
-        
+
+        .tool-btn.active {
+            background-color: #3b82f6 !important;
+            color: white !important;
+        }
+
         input[type="color"] {
-            -webkit-appearance: none; border: none; width: 32px; height: 32px; border-radius: 4px; padding: 0; cursor: pointer; overflow: hidden;
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            padding: 0;
+            cursor: pointer;
+            overflow: hidden;
         }
-        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px;}
-        
-        .props-group { display: none; }
-        .props-group.active { display: flex; }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+
+        .props-group {
+            display: none;
+        }
+
+        .props-group.active {
+            display: flex;
+        }
     </style>
 </head>
+
 <body class="flex flex-col h-screen select-none bg-gray-50 text-gray-800 dark:bg-[#1a1a1a] dark:text-[#e5e5e5] transition-colors duration-200">
 
     <!-- 頂部工具列 -->
@@ -70,7 +134,7 @@
 
         <!-- 動態工具屬性面板 -->
         <div class="flex-1 flex items-center overflow-x-auto ml-4 pl-4 border-l border-gray-300 dark:border-zinc-700 gap-4 flex-nowrap">
-            
+
             <!-- 選取模式：刪除按鈕 -->
             <button id="btn-delete" class="hidden items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm font-medium transition whitespace-nowrap" title="刪除選取物件 (Delete)">
                 <i class="ph ph-trash text-lg"></i> 刪除
@@ -134,7 +198,7 @@
                     <button id="btn-underline" class="format-btn w-8 h-8 rounded flex items-center justify-center hover:bg-gray-300 dark:hover:bg-zinc-700"><i class="ph ph-text-underline text-lg"></i></button>
                 </div>
             </div>
-            
+
             <!-- 視角與主題控制 -->
             <div class="ml-auto flex items-center gap-1 border-l border-gray-300 dark:border-zinc-700 pl-4 shrink-0 flex-nowrap whitespace-nowrap">
                 <button id="btn-zoom-out" class="tool-btn w-8 h-8 hover:bg-gray-200 dark:hover:bg-zinc-700" title="縮小"><i class="ph ph-magnifying-glass-minus text-lg"></i></button>
@@ -177,9 +241,9 @@
                     <p>請先上傳圖片以開始編輯</p>
                 </div>
             </div>
-            
+
             <canvas id="main-canvas" class="absolute top-0 left-0"></canvas>
-            
+
             <!-- 富文本輸入框 (懸浮) -->
             <div id="text-input-container">
                 <div id="text-input" contenteditable="true" spellcheck="false" data-placeholder="輸入文字..."></div>
@@ -214,18 +278,37 @@
 
         // 核心狀態
         let img = null;
-        let originalImgWidth = 0; let originalImgHeight = 0;
-        let crop = { x: 0, y: 0, w: 0, h: 0 }; 
-        let view = { scale: 1, panX: 0, panY: 0 }; 
-        
+        let originalImgWidth = 0;
+        let originalImgHeight = 0;
+        let crop = {
+            x: 0,
+            y: 0,
+            w: 0,
+            h: 0
+        };
+        let view = {
+            scale: 1,
+            panX: 0,
+            panY: 0
+        };
+
         let history = []; // 儲存所有物件指令
         let historyStep = -1;
-        
+
         let currentTool = 'select';
-        let isDrawing = false; let isPanning = false; let isCropping = false;
-        let cropHandle = null; 
-        let startPt = { x: 0, y: 0 }; let lastPt = { x: 0, y: 0 };  
-        let currentCmd = null; 
+        let isDrawing = false;
+        let isPanning = false;
+        let isCropping = false;
+        let cropHandle = null;
+        let startPt = {
+            x: 0,
+            y: 0
+        };
+        let lastPt = {
+            x: 0,
+            y: 0
+        };
+        let currentCmd = null;
 
         // 選取模式狀態
         let selectedObj = null;
@@ -235,23 +318,47 @@
         let originalObjState = null;
 
         // 富文本狀態
-        let textStartPt = {x:0, y:0};
+        let textStartPt = {
+            x: 0,
+            y: 0
+        };
         let editingTextObj = null; // 正在編輯的現有文字物件
         let base64Fonts = {}; // 儲存自訂字型 base64 以供 SVG 渲染
 
         // 工具獨立設定
         let settings = {
-            rect: { color: '#ff0000', lineWidth: 5, shapeStyle: 'stroke', borderRadius: 0 },
-            circle: { color: '#3b82f6', lineWidth: 5, shapeStyle: 'stroke' },
-            erase: { lineWidth: 30 },
-            text: { color: '#eab308', fontFamily: 'sans-serif', fontSize: 48, isBold: false, isItalic: false, isUnderline: false }
+            rect: {
+                color: '#ff0000',
+                lineWidth: 5,
+                shapeStyle: 'stroke',
+                borderRadius: 0
+            },
+            circle: {
+                color: '#3b82f6',
+                lineWidth: 5,
+                shapeStyle: 'stroke'
+            },
+            erase: {
+                lineWidth: 30
+            },
+            text: {
+                color: '#eab308',
+                fontFamily: 'sans-serif',
+                fontSize: 48,
+                isBold: false,
+                isItalic: false,
+                isUnderline: false
+            }
         };
 
         // --- 初始化 ---
         function init() {
             resizeCanvas();
-            window.addEventListener('resize', () => { resizeCanvas(); requestRender(); });
-            
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                requestRender();
+            });
+
             // 啟用舊版 execCommand 的 CSS 模式，確保產生 inline style
             document.execCommand('styleWithCSS', false, true);
 
@@ -262,7 +369,8 @@
             // 綁定 Slider 和 "+/-" 按鈕
             setupSliderWithButtons('line-width', 'btn-line-width-dec', 'btn-line-width-inc', 'line-width-val', (val) => {
                 if (selectedObj && ['rect', 'circle'].includes(selectedObj.type)) {
-                    selectedObj.lineWidth = val; requestRender();
+                    selectedObj.lineWidth = val;
+                    requestRender();
                 } else if (['rect', 'circle', 'erase'].includes(currentTool)) {
                     settings[currentTool].lineWidth = val;
                 }
@@ -270,7 +378,8 @@
 
             setupSliderWithButtons('border-radius', 'btn-border-radius-dec', 'btn-border-radius-inc', 'border-radius-val', (val) => {
                 if (selectedObj && selectedObj.type === 'rect') {
-                    selectedObj.borderRadius = val; requestRender();
+                    selectedObj.borderRadius = val;
+                    requestRender();
                 } else if (currentTool === 'rect') {
                     settings.rect.borderRadius = val;
                 }
@@ -280,7 +389,7 @@
                 if (textInputContainer.style.display === 'block') {
                     applyHtmlFontSize(val);
                 } else {
-                    settings.text.fontSize = parseInt(val);
+                    settings.text.fontSize = parseInt(val); // ← 確保更新 settings
                 }
             });
 
@@ -288,7 +397,8 @@
             document.getElementById('color-picker').addEventListener('input', (e) => {
                 const val = e.target.value;
                 if (selectedObj && ['rect', 'circle'].includes(selectedObj.type)) {
-                    selectedObj.color = val; requestRender();
+                    selectedObj.color = val;
+                    requestRender();
                 } else if (['rect', 'circle'].includes(currentTool)) {
                     settings[currentTool].color = val;
                 }
@@ -298,7 +408,8 @@
                 btn.addEventListener('click', (e) => {
                     const style = e.target.dataset.style;
                     if (selectedObj && ['rect', 'circle'].includes(selectedObj.type)) {
-                        selectedObj.style = style; requestRender();
+                        selectedObj.style = style;
+                        requestRender();
                     } else if (['rect', 'circle'].includes(currentTool)) {
                         settings[currentTool].shapeStyle = style;
                     }
@@ -315,7 +426,7 @@
                 if (textInputContainer.style.display === 'block') document.execCommand('fontName', false, e.target.value);
                 else settings.text.fontFamily = e.target.value;
             });
-            
+
             // 粗斜底按鈕
             ['bold', 'italic', 'underline'].forEach(style => {
                 document.getElementById(`btn-${style}`).addEventListener('mousedown', (e) => {
@@ -332,11 +443,11 @@
             document.getElementById('btn-redo').addEventListener('click', redo);
             document.getElementById('btn-eyedropper').addEventListener('click', () => setTool('eyedropper'));
             document.getElementById('btn-theme').addEventListener('click', () => document.documentElement.classList.toggle('dark'));
-            
+
             document.getElementById('btn-zoom-in').addEventListener('click', () => zoom(1.2));
-            document.getElementById('btn-zoom-out').addEventListener('click', () => zoom(1/1.2));
+            document.getElementById('btn-zoom-out').addEventListener('click', () => zoom(1 / 1.2));
             document.getElementById('btn-fit').addEventListener('click', fitToScreen);
-            
+
             // 刪除與清空按鈕
             document.getElementById('btn-delete').addEventListener('click', deleteSelectedObject);
             document.getElementById('btn-clear-all').addEventListener('click', () => {
@@ -364,27 +475,36 @@
 
             // 畫布滑鼠事件
             container.addEventListener('mousedown', onMouseDown);
-            container.addEventListener('dblclick', onDoubleClick); 
+            container.addEventListener('dblclick', onDoubleClick);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
-            container.addEventListener('wheel', onWheel, { passive: false });
-            container.addEventListener('contextmenu', e => e.preventDefault()); 
+            container.addEventListener('wheel', onWheel, {
+                passive: false
+            });
+            container.addEventListener('contextmenu', e => e.preventDefault());
 
             textInputContainer.addEventListener('mousedown', e => e.stopPropagation());
             document.getElementById('props-text').addEventListener('mousedown', e => e.stopPropagation());
 
             window.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && textInputContainer.style.display === 'none') {
-                    if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); undo(); }
-                    if (e.key === 'y' || e.key === 'Y') { e.preventDefault(); redo(); }
+                    if (e.key === 'z' || e.key === 'Z') {
+                        e.preventDefault();
+                        undo();
+                    }
+                    if (e.key === 'y' || e.key === 'Y') {
+                        e.preventDefault();
+                        redo();
+                    }
                 }
             });
 
-            setTool('select'); 
+            setTool('select');
         }
 
         function resizeCanvas() {
-            canvas.width = container.clientWidth; canvas.height = container.clientHeight;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
         }
 
         // --- 整合 +/- 按鈕之 Slider 輔助函式 ---
@@ -438,16 +558,16 @@
 
         // --- 工具切換與 UI 同步 ---
         function setTool(tool) {
-            if (tool !== 'text') commitText(); 
+            if (tool !== 'text') commitText();
             if (tool !== 'select' && tool !== 'eyedropper') selectedObj = null;
 
             currentTool = tool;
-            
+
             document.querySelectorAll('.tool-select').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tool === tool);
             });
 
-            container.className = 'flex-1 relative bg-gray-200 dark:bg-neutral-950 overflow-hidden transition-colors '; 
+            container.className = 'flex-1 relative bg-gray-200 dark:bg-neutral-950 overflow-hidden transition-colors ';
             if (tool === 'pan') container.classList.add('cursor-grab');
             else if (tool === 'text') container.classList.add('cursor-text');
             else if (tool === 'select') container.classList.add('cursor-default');
@@ -462,7 +582,7 @@
             document.querySelectorAll('.props-group').forEach(p => p.classList.remove('active'));
             document.getElementById('btn-delete').classList.add('hidden');
             document.getElementById('select-divider').classList.add('hidden');
-            
+
             let contextObj = null;
             let contextTool = currentTool;
 
@@ -477,10 +597,11 @@
                 document.getElementById('props-draw').classList.add('active');
                 document.getElementById('color-picker-container').style.display = 'flex';
                 document.getElementById('shape-style-toggle').style.display = 'flex';
-                
+
                 const rContainer = document.getElementById('radius-container');
-                if (contextTool === 'rect') rContainer.classList.remove('hidden'); else rContainer.classList.add('hidden');
-                
+                if (contextTool === 'rect') rContainer.classList.remove('hidden');
+                else rContainer.classList.add('hidden');
+
                 const source = contextObj || settings[contextTool];
                 document.getElementById('color-picker').value = source.color;
                 document.getElementById('line-width').value = source.lineWidth;
@@ -489,19 +610,23 @@
                     document.getElementById('border-radius').value = source.borderRadius || 0;
                     document.getElementById('border-radius-val').textContent = source.borderRadius || 0;
                 }
-            } 
-            else if (contextTool === 'erase') {
+            } else if (contextTool === 'erase') {
                 document.getElementById('props-draw').classList.add('active');
                 document.getElementById('color-picker-container').style.display = 'none';
                 document.getElementById('shape-style-toggle').style.display = 'none';
                 document.getElementById('radius-container').classList.add('hidden');
-                
+
                 const source = contextObj || settings.erase;
                 document.getElementById('line-width').value = source.lineWidth;
                 document.getElementById('line-width-val').textContent = source.lineWidth;
-            } 
-            else if (contextTool === 'text') {
+            } else if (contextTool === 'text') {
                 document.getElementById('props-text').classList.add('active');
+
+                // 新增：同步設定到工具列
+                document.getElementById('text-color-picker').value = settings.text.color;
+                document.getElementById('font-family').value = settings.text.fontFamily;
+                document.getElementById('font-size').value = settings.text.fontSize;
+                document.getElementById('font-size-val').textContent = settings.text.fontSize;
             }
             syncFormatButtonsUI(contextObj);
         }
@@ -531,43 +656,58 @@
 
         // --- 檔案與字型上傳 ---
         function handleImageUpload(e) {
-            const file = e.target.files[0]; if (!file) return;
+            const file = e.target.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 const newImg = new Image();
                 newImg.onload = () => {
                     img = newImg;
-                    originalImgWidth = img.width; originalImgHeight = img.height;
-                    crop = { x: 0, y: 0, w: img.width, h: img.height };
-                    history = []; historyStep = -1; selectedObj = null;
-                    fitToScreen(); updateSysUI();
+                    originalImgWidth = img.width;
+                    originalImgHeight = img.height;
+                    crop = {
+                        x: 0,
+                        y: 0,
+                        w: img.width,
+                        h: img.height
+                    };
+                    history = [];
+                    historyStep = -1;
+                    selectedObj = null;
+                    fitToScreen();
+                    updateSysUI();
                 };
                 newImg.src = event.target.result;
             };
-            reader.readAsDataURL(file); e.target.value = ''; 
+            reader.readAsDataURL(file);
+            e.target.value = '';
         }
 
         function handleFontUpload(e) {
-            const file = e.target.files[0]; if (!file) return;
+            const file = e.target.files[0];
+            if (!file) return;
             const reader = new FileReader();
             reader.onload = (event) => {
                 const b64 = event.target.result;
                 const fontName = `CustomFont_${Date.now()}`;
-                base64Fonts[fontName] = b64; 
-                
+                base64Fonts[fontName] = b64;
+
                 const fontFace = new FontFace(fontName, `url(${b64})`);
                 fontFace.load().then(loadedFace => {
                     document.fonts.add(loadedFace);
                     const select = document.getElementById('font-family');
                     const option = document.createElement('option');
-                    option.value = fontName; option.textContent = file.name.split('.')[0];
-                    select.appendChild(option); select.value = fontName;
-                    
+                    option.value = fontName;
+                    option.textContent = file.name.split('.')[0];
+                    select.appendChild(option);
+                    select.value = fontName;
+
                     if (textInputContainer.style.display === 'block') document.execCommand('fontName', false, fontName);
                     else settings.text.fontFamily = fontName;
                 });
             };
-            reader.readAsDataURL(file); e.target.value = '';
+            reader.readAsDataURL(file);
+            e.target.value = '';
         }
 
         // --- 座標轉換 (優化防飄移) ---
@@ -581,7 +721,7 @@
 
         function imageToCanvas(imgX, imgY) {
             return {
-                x: imgX * view.scale + view.panX, 
+                x: imgX * view.scale + view.panX,
                 y: imgY * view.scale + view.panY
             };
         }
@@ -590,7 +730,7 @@
         function fitToScreen() {
             if (!img) return;
             const pad = 40;
-            view.scale = Math.min((canvas.width - pad*2) / crop.w, (canvas.height - pad*2) / crop.h);
+            view.scale = Math.min((canvas.width - pad * 2) / crop.w, (canvas.height - pad * 2) / crop.h);
             view.panX = canvas.width / 2 - (crop.x + crop.w / 2) * view.scale;
             view.panY = canvas.height / 2 - (crop.y + crop.h / 2) * view.scale;
             requestRender();
@@ -602,43 +742,61 @@
             view.scale = Math.max(0.01, Math.min(view.scale * factor, 50));
             view.panX = cx - (cx - view.panX) * (view.scale / oldScale);
             view.panY = cy - (cy - view.panY) * (view.scale / oldScale);
-            
+
             if (textInputContainer.style.display === 'block' && editingTextObj) {
                 textInput.style.transform = `scale(${view.scale * editingTextObj.scale})`;
                 const sc = imageToCanvas(editingTextObj.x, editingTextObj.y);
-                textInputContainer.style.left = sc.x + 'px'; textInputContainer.style.top = sc.y + 'px';
+                textInputContainer.style.left = sc.x + 'px';
+                textInputContainer.style.top = sc.y + 'px';
             }
             requestRender();
         }
 
         function onWheel(e) {
-            if (!img) return; e.preventDefault();
+            if (!img) return;
+            e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            zoom(e.deltaY < 0 ? 1.1 : 1/1.1, e.clientX - rect.left, e.clientY - rect.top);
+            zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - rect.left, e.clientY - rect.top);
         }
 
         function onMouseDown(e) {
             if (!img) return;
             const pt = screenToImage(e.clientX, e.clientY);
-            
-            // 點選空白處保存，且避免在此次 Mousedown 點擊重新建立一個新文字框
-            const wasEditing = (textInputContainer.style.display === 'block');
-            if (wasEditing) {
-                commitText();
-                if (currentTool === 'text') return; // 直接返回，不產生新輸入框
+
+            // === 改進版：只有點擊「畫布區域」且不是文字框本身時才 commit ===
+            if (textInputContainer.style.display === 'block') {
+                const isClickingTextBox = e.target.closest('#text-input-container') ||
+                    e.target.id === 'text-input';
+
+                if (!isClickingTextBox) {
+                    commitText();
+
+                    // 如果是文字工具，點擊外部後不要立刻開新輸入框
+                    if (currentTool === 'text') {
+                        return;
+                    }
+                } else {
+                    // 點擊文字框內部 → 什麼都不做，讓 contenteditable 正常運作
+                    return;
+                }
             }
 
             // 右鍵或平移
             if (e.button === 2 || e.button === 1 || currentTool === 'pan') {
-                isPanning = true; lastPt = { x: e.clientX, y: e.clientY };
+                isPanning = true;
+                lastPt = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
                 if (currentTool === 'pan') container.classList.replace('cursor-grab', 'cursor-grabbing');
                 return;
             }
-            if (e.button !== 0) return; 
+            if (e.button !== 0) return;
 
             if (currentTool === 'eyedropper') {
                 pickColor(e.clientX, e.clientY);
-                setTool('rect'); return;
+                setTool('rect');
+                return;
             }
 
             if (currentTool === 'crop') {
@@ -650,16 +808,24 @@
             if (currentTool === 'select') {
                 const handle = getHitSelectionHandle(pt.x, pt.y);
                 if (handle) {
-                    isResizingObj = true; resizeHandleObj = handle;
-                    startPt = { x: pt.x, y: pt.y };
-                    originalObjState = JSON.parse(JSON.stringify(selectedObj)); 
+                    isResizingObj = true;
+                    resizeHandleObj = handle;
+                    startPt = {
+                        x: pt.x,
+                        y: pt.y
+                    };
+                    originalObjState = JSON.parse(JSON.stringify(selectedObj));
                     return;
                 }
                 const hitObj = getHitObject(pt.x, pt.y);
                 selectedObj = hitObj;
                 updateToolbarForCurrentContext();
                 if (hitObj) {
-                    isDraggingObj = true; startPt = { x: pt.x, y: pt.y };
+                    isDraggingObj = true;
+                    startPt = {
+                        x: pt.x,
+                        y: pt.y
+                    };
                     originalObjState = JSON.parse(JSON.stringify(hitObj));
                 }
                 requestRender();
@@ -667,20 +833,33 @@
             }
 
             if (currentTool === 'text') {
-                showTextInput(e.clientX, e.clientY, pt); return;
+                showTextInput(e.clientX, e.clientY, pt);
+                return;
             }
 
             // 開始繪圖
-            isDrawing = true; startPt = pt;
+            isDrawing = true;
+            startPt = pt;
             const newId = Date.now().toString();
             if (currentTool === 'erase') {
-                currentCmd = { id: newId, type: 'erase', lineWidth: settings.erase.lineWidth, points: [pt] };
+                currentCmd = {
+                    id: newId,
+                    type: 'erase',
+                    lineWidth: settings.erase.lineWidth,
+                    points: [pt]
+                };
             } else if (['rect', 'circle'].includes(currentTool)) {
-                currentCmd = { 
-                    id: newId, type: currentTool, style: settings[currentTool].shapeStyle, 
-                    color: settings[currentTool].color, lineWidth: settings[currentTool].lineWidth,
+                currentCmd = {
+                    id: newId,
+                    type: currentTool,
+                    style: settings[currentTool].shapeStyle,
+                    color: settings[currentTool].color,
+                    lineWidth: settings[currentTool].lineWidth,
                     borderRadius: currentTool === 'rect' ? settings.rect.borderRadius : 0,
-                    x: pt.x, y: pt.y, w: 0, h: 0 
+                    x: pt.x,
+                    y: pt.y,
+                    w: 0,
+                    h: 0
                 };
             }
         }
@@ -688,36 +867,58 @@
         function onMouseMove(e) {
             if (!img) return;
             if (isPanning) {
-                view.panX += e.clientX - lastPt.x; view.panY += e.clientY - lastPt.y;
-                lastPt = { x: e.clientX, y: e.clientY }; requestRender(); return;
+                view.panX += e.clientX - lastPt.x;
+                view.panY += e.clientY - lastPt.y;
+                lastPt = {
+                    x: e.clientX,
+                    y: e.clientY
+                };
+                requestRender();
+                return;
             }
 
             const pt = screenToImage(e.clientX, e.clientY);
 
             if (isCropping && cropHandle) {
-                let newX = crop.x, newY = crop.y, newW = crop.w, newH = crop.h;
-                if (cropHandle.includes('w')) { newW += (crop.x - pt.x); newX = pt.x; }
-                if (cropHandle.includes('e')) { newW = pt.x - crop.x; }
-                if (cropHandle.includes('n')) { newH += (crop.y - pt.y); newY = pt.y; }
-                if (cropHandle.includes('s')) { newH = pt.y - crop.y; }
+                let newX = crop.x,
+                    newY = crop.y,
+                    newW = crop.w,
+                    newH = crop.h;
+                if (cropHandle.includes('w')) {
+                    newW += (crop.x - pt.x);
+                    newX = pt.x;
+                }
+                if (cropHandle.includes('e')) {
+                    newW = pt.x - crop.x;
+                }
+                if (cropHandle.includes('n')) {
+                    newH += (crop.y - pt.y);
+                    newY = pt.y;
+                }
+                if (cropHandle.includes('s')) {
+                    newH = pt.y - crop.y;
+                }
                 if (newW > 10 && newH > 10) {
                     crop.x = Math.max(0, Math.min(newX, originalImgWidth - 10));
                     crop.y = Math.max(0, Math.min(newY, originalImgHeight - 10));
                     crop.w = Math.min(newW, originalImgWidth - crop.x);
                     crop.h = Math.min(newH, originalImgHeight - crop.y);
                 }
-                requestRender(); return;
+                requestRender();
+                return;
             }
 
             if (isDraggingObj && selectedObj) {
                 selectedObj.x = originalObjState.x + (pt.x - startPt.x);
                 selectedObj.y = originalObjState.y + (pt.y - startPt.y);
-                requestRender(); return;
+                requestRender();
+                return;
             }
 
             if (isResizingObj && selectedObj && originalObjState) {
-                const dx = pt.x - startPt.x; const dy = pt.y - startPt.y;
-                
+                const dx = pt.x - startPt.x;
+                const dy = pt.y - startPt.y;
+
                 if (selectedObj.type === 'text') {
                     if (resizeHandleObj === 'se') {
                         const originalW = originalObjState.w * originalObjState.scale;
@@ -725,20 +926,41 @@
                         selectedObj.scale = newW / originalObjState.w;
                     }
                 } else {
-                    let newX = originalObjState.x, newY = originalObjState.y;
-                    let newW = originalObjState.w, newH = originalObjState.h;
-                    if (newW < 0) { newX += newW; newW = Math.abs(newW); }
-                    if (newH < 0) { newY += newH; newH = Math.abs(newH); }
+                    let newX = originalObjState.x,
+                        newY = originalObjState.y;
+                    let newW = originalObjState.w,
+                        newH = originalObjState.h;
+                    if (newW < 0) {
+                        newX += newW;
+                        newW = Math.abs(newW);
+                    }
+                    if (newH < 0) {
+                        newY += newH;
+                        newH = Math.abs(newH);
+                    }
 
-                    if (resizeHandleObj.includes('w')) { newW -= dx; newX += dx; }
-                    if (resizeHandleObj.includes('e')) { newW += dx; }
-                    if (resizeHandleObj.includes('n')) { newH -= dy; newY += dy; }
-                    if (resizeHandleObj.includes('s')) { newH += dy; }
-                    
-                    selectedObj.x = newX; selectedObj.y = newY;
-                    selectedObj.w = newW; selectedObj.h = newH;
+                    if (resizeHandleObj.includes('w')) {
+                        newW -= dx;
+                        newX += dx;
+                    }
+                    if (resizeHandleObj.includes('e')) {
+                        newW += dx;
+                    }
+                    if (resizeHandleObj.includes('n')) {
+                        newH -= dy;
+                        newY += dy;
+                    }
+                    if (resizeHandleObj.includes('s')) {
+                        newH += dy;
+                    }
+
+                    selectedObj.x = newX;
+                    selectedObj.y = newY;
+                    selectedObj.w = newW;
+                    selectedObj.h = newH;
                 }
-                requestRender(); return;
+                requestRender();
+                return;
             }
 
             // 選取模式游標
@@ -766,19 +988,29 @@
                 if (currentTool === 'erase') {
                     currentCmd.points.push(pt);
                 } else {
-                    currentCmd.w = pt.x - startPt.x; currentCmd.h = pt.y - startPt.y;
+                    currentCmd.w = pt.x - startPt.x;
+                    currentCmd.h = pt.y - startPt.y;
                 }
                 requestRender();
             }
         }
 
         function onMouseUp(e) {
-            if (isPanning) { isPanning = false; if (currentTool === 'pan') container.classList.replace('cursor-grabbing', 'cursor-grab'); }
-            if (isCropping) { isCropping = false; cropHandle = null; }
-            
+            if (isPanning) {
+                isPanning = false;
+                if (currentTool === 'pan') container.classList.replace('cursor-grabbing', 'cursor-grab');
+            }
+            if (isCropping) {
+                isCropping = false;
+                cropHandle = null;
+            }
+
             if (isDraggingObj || isResizingObj) {
-                isDraggingObj = false; isResizingObj = false; resizeHandleObj = null; originalObjState = null;
-                addCommand(null, true); 
+                isDraggingObj = false;
+                isResizingObj = false;
+                resizeHandleObj = null;
+                originalObjState = null;
+                addCommand(null, true);
             }
 
             if (isDrawing && currentCmd) {
@@ -787,7 +1019,8 @@
                 if (currentCmd.type === 'erase' && currentCmd.points.length > 1) isValid = true;
                 if (['rect', 'circle'].includes(currentCmd.type) && (Math.abs(currentCmd.w) > 2 || Math.abs(currentCmd.h) > 2)) isValid = true;
                 if (isValid) addCommand(currentCmd);
-                currentCmd = null; requestRender();
+                currentCmd = null;
+                requestRender();
             }
         }
 
@@ -798,12 +1031,12 @@
                 textInputContainer.style.display = 'block';
                 textInputContainer.style.left = sc.x + 'px';
                 textInputContainer.style.top = sc.y + 'px';
-                
+
                 textInput.innerHTML = selectedObj.html;
                 textInput.style.transform = `scale(${view.scale * selectedObj.scale})`;
                 textInput.style.transformOrigin = 'top left';
                 textInput.focus();
-                requestRender(); 
+                requestRender();
             }
         }
 
@@ -811,37 +1044,66 @@
         function addCommand(cmd, isUpdate = false) {
             if (historyStep < history.length - 1) history = history.slice(0, historyStep + 1);
             if (cmd) history.push(cmd);
-            historyStep++; updateSysUI();
+            historyStep++;
+            updateSysUI();
         }
-        function undo() { if (historyStep >= 0) { historyStep--; selectedObj = null; updateToolbarForCurrentContext(); requestRender(); } }
-        function redo() { if (historyStep < history.length - 1) { historyStep++; selectedObj = null; updateToolbarForCurrentContext(); requestRender(); } }
-        
+
+        function undo() {
+            if (historyStep >= 0) {
+                historyStep--;
+                selectedObj = null;
+                updateToolbarForCurrentContext();
+                requestRender();
+            }
+        }
+
+        function redo() {
+            if (historyStep < history.length - 1) {
+                historyStep++;
+                selectedObj = null;
+                updateToolbarForCurrentContext();
+                requestRender();
+            }
+        }
+
         function deleteSelectedObject() {
             if (selectedObj) {
                 history = history.filter(cmd => cmd.id !== selectedObj.id);
-                selectedObj = null; addCommand(null, true);
-                updateToolbarForCurrentContext(); requestRender();
+                selectedObj = null;
+                addCommand(null, true);
+                updateToolbarForCurrentContext();
+                requestRender();
             }
         }
 
         function showTextInput(screenX, screenY, imgPt) {
-            textStartPt = imgPt; editingTextObj = null;
+            textStartPt = imgPt;
+            editingTextObj = null;
+
             const rect = canvas.getBoundingClientRect();
             textInputContainer.style.display = 'block';
             textInputContainer.style.left = (screenX - rect.left) + 'px';
             textInputContainer.style.top = (screenY - rect.top) + 'px';
             textInput.innerHTML = '';
-            
+
+            // === 完整套用目前設定 ===
             textInput.style.color = settings.text.color;
             textInput.style.fontFamily = settings.text.fontFamily;
+            textInput.style.fontSize = settings.text.fontSize + 'px';
+            textInput.style.fontWeight = settings.text.isBold ? 'bold' : 'normal';
+            textInput.style.fontStyle = settings.text.isItalic ? 'italic' : 'normal';
+            textInput.style.textDecoration = settings.text.isUnderline ? 'underline' : 'none';
+
             textInput.style.transform = `scale(${view.scale})`;
             textInput.style.transformOrigin = 'top left';
-            
-            setTimeout(() => { 
-                textInput.focus(); 
-                document.execCommand('fontSize', false, 7); 
-                applyHtmlFontSize(settings.text.fontSize); 
-            }, 10);
+            textInput.style.lineHeight = '1.2'; // 新增：避免行高問題
+
+            setTimeout(() => {
+                textInput.focus();
+                // 清除 execCommand 預設干擾
+                document.execCommand('fontSize', false, '7');
+                applyHtmlFontSize(settings.text.fontSize);
+            }, 30);
         }
 
         function applyHtmlFontSize(size) {
@@ -855,87 +1117,131 @@
 
         async function commitText() {
             if (textInputContainer.style.display === 'none') return;
-            const html = textInput.innerHTML;
+
+            const html = textInput.innerHTML.trim();
             const textContent = textInput.textContent.trim();
+
             textInputContainer.style.display = 'none';
-            
+
             if (textContent !== '') {
                 const rect = textInput.getBoundingClientRect();
                 const currentScale = view.scale * (editingTextObj ? editingTextObj.scale : 1);
-                const w = rect.width / currentScale;
-                const h = rect.height / currentScale;
-                
+                const w = Math.max(20, rect.width / currentScale);
+                const h = Math.max(20, rect.height / currentScale);
+
                 const color = editingTextObj ? (editingTextObj.color || settings.text.color) : settings.text.color;
                 const fontSize = editingTextObj ? (editingTextObj.fontSize || settings.text.fontSize) : settings.text.fontSize;
                 const fontFamily = editingTextObj ? (editingTextObj.fontFamily || settings.text.fontFamily) : settings.text.fontFamily;
 
-                const img = await generateTextSvg(html, w, h, color, fontSize, fontFamily);
-                
+                // 產生 SVG 圖片
+                const textImg = await generateTextSvg(html, w, h, color, fontSize, fontFamily);
+
                 if (editingTextObj) {
-                    editingTextObj.html = html; editingTextObj.w = w; editingTextObj.h = h;
-                    editingTextObj.img = img;
-                    addCommand(null, true); 
+                    editingTextObj.html = html;
+                    editingTextObj.w = w;
+                    editingTextObj.h = h;
+                    editingTextObj.img = textImg;
+                    addCommand(null, true);
                 } else {
-                    addCommand({
-                        id: Date.now().toString(), type: 'text', html: html,
-                        x: textStartPt.x, y: textStartPt.y, w: w, h: h, scale: 1, img: img,
-                        color: color, fontSize: fontSize, fontFamily: fontFamily
-                    });
+                    const newCmd = {
+                        id: Date.now().toString(),
+                        type: 'text',
+                        html: html,
+                        x: textStartPt.x,
+                        y: textStartPt.y,
+                        w: w,
+                        h: h,
+                        scale: 1,
+                        img: textImg,
+                        color: color,
+                        fontSize: fontSize,
+                        fontFamily: fontFamily
+                    };
+                    addCommand(newCmd);
                 }
             } else if (editingTextObj) {
+                // 空白 → 刪除
                 history = history.filter(cmd => cmd.id !== editingTextObj.id);
                 addCommand(null, true);
             }
-            editingTextObj = null; requestRender();
-        }
 
+            editingTextObj = null;
+            requestRender();
+            updateToolbarForCurrentContext();
+        }
         async function generateTextSvg(html, width, height, color, fontSize, fontFamily) {
             let fontStyles = '';
             for (const [fontName, b64] of Object.entries(base64Fonts)) {
                 fontStyles += `@font-face { font-family: '${fontName}'; src: url('${b64}'); }\n`;
             }
+
             const cleanHtml = html.replace(/<br>/g, '<br/>');
-            const svg = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-                    <foreignObject width="100%" height="100%">
-                        <div xmlns="http://www.w3.org/1999/xhtml" style="margin:0; padding:4px; box-sizing:border-box; font-family:'${fontFamily}',sans-serif; font-size:${fontSize}px; color:${color}; white-space:pre-wrap; word-break:break-word; width:${width}px; height:${height}px;">
-                            <style>${fontStyles}</style>
-                            ${cleanHtml}
-                        </div>
-                    </foreignObject>
-                </svg>`;
-            
-            const blob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
+
+            const svgString = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+            <foreignObject width="100%" height="100%">
+                <div xmlns="http://www.w3.org/1999/xhtml" 
+                     style="margin:0; padding:8px; box-sizing:border-box; 
+                            font-family:'${fontFamily}',sans-serif; 
+                            font-size:${fontSize}px; 
+                            color:${color}; 
+                            white-space:pre-wrap; 
+                            word-break:break-word; 
+                            width:${width}px; 
+                            height:${height}px;
+                            line-height:1.2;">
+                    <style>${fontStyles}</style>
+                    ${cleanHtml}
+                </div>
+            </foreignObject>
+        </svg>`;
+
+            const blob = new Blob([svgString], {
+                type: 'image/svg+xml;charset=utf-8'
+            });
             const url = URL.createObjectURL(blob);
+
             return new Promise((resolve) => {
                 const img = new Image();
-                img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
-                img.onerror = () => { resolve(null); }; 
+                img.onload = () => {
+                    URL.revokeObjectURL(url);
+                    resolve(img);
+                };
+                img.onerror = (e) => {
+                    console.error("SVG 轉圖片失敗", e);
+                    URL.revokeObjectURL(url);
+                    resolve(null);
+                };
                 img.src = url;
             });
         }
-
         // --- 選取與碰撞偵測 ---
         function getHitObject(x, y) {
             const activeHistory = historyStep >= 0 ? history.slice(0, historyStep + 1) : [];
             for (let i = activeHistory.length - 1; i >= 0; i--) {
                 const cmd = activeHistory[i];
-                if (cmd.type === 'erase') continue; 
-                
+                if (cmd.type === 'erase') continue;
+
                 if (cmd.type === 'text') {
-                    const scaledW = cmd.w * cmd.scale; const scaledH = cmd.h * cmd.scale;
+                    const scaledW = cmd.w * cmd.scale;
+                    const scaledH = cmd.h * cmd.scale;
                     if (x >= cmd.x && x <= cmd.x + scaledW && y >= cmd.y && y <= cmd.y + scaledH) return cmd;
                 } else if (cmd.type === 'rect') {
-                    const rx = cmd.w < 0 ? cmd.x + cmd.w : cmd.x; const ry = cmd.h < 0 ? cmd.y + cmd.h : cmd.y;
-                    const rw = Math.abs(cmd.w); const rh = Math.abs(cmd.h);
+                    const rx = cmd.w < 0 ? cmd.x + cmd.w : cmd.x;
+                    const ry = cmd.h < 0 ? cmd.y + cmd.h : cmd.y;
+                    const rw = Math.abs(cmd.w);
+                    const rh = Math.abs(cmd.h);
                     const pad = cmd.lineWidth / 2 + 5;
                     if (x >= rx - pad && x <= rx + rw + pad && y >= ry - pad && y <= ry + rh + pad) return cmd;
                 } else if (cmd.type === 'circle') {
-                    const cx = cmd.x + cmd.w/2; const cy = cmd.y + cmd.h/2;
-                    const rx = Math.abs(cmd.w/2); const ry = Math.abs(cmd.h/2);
+                    const cx = cmd.x + cmd.w / 2;
+                    const cy = cmd.y + cmd.h / 2;
+                    const rx = Math.abs(cmd.w / 2);
+                    const ry = Math.abs(cmd.h / 2);
                     if (rx > 0 && ry > 0) {
-                        const dx = x - cx; const dy = y - cy;
-                        if ((dx*dx)/((rx+10)*(rx+10)) + (dy*dy)/((ry+10)*(ry+10)) <= 1) return cmd;
+                        const dx = x - cx;
+                        const dy = y - cy;
+                        if ((dx * dx) / ((rx + 10) * (rx + 10)) + (dy * dy) / ((ry + 10) * (ry + 10)) <= 1) return cmd;
                     }
                 }
             }
@@ -947,17 +1253,34 @@
             const tolerance = 10 / view.scale;
             let sx, sy, sw, sh;
             if (selectedObj.type === 'text') {
-                sx = selectedObj.x; sy = selectedObj.y;
-                sw = selectedObj.w * selectedObj.scale; sh = selectedObj.h * selectedObj.scale;
+                sx = selectedObj.x;
+                sy = selectedObj.y;
+                sw = selectedObj.w * selectedObj.scale;
+                sh = selectedObj.h * selectedObj.scale;
             } else if (selectedObj.type === 'rect' || selectedObj.type === 'circle') {
                 sx = selectedObj.w < 0 ? selectedObj.x + selectedObj.w : selectedObj.x;
                 sy = selectedObj.h < 0 ? selectedObj.y + selectedObj.h : selectedObj.y;
-                sw = Math.abs(selectedObj.w); sh = Math.abs(selectedObj.h);
+                sw = Math.abs(selectedObj.w);
+                sh = Math.abs(selectedObj.h);
             }
-            
+
             const handles = {
-                nw: {x: sx, y: sy}, ne: {x: sx+sw, y: sy},
-                sw: {x: sx, y: sy+sh}, se: {x: sx+sw, y: sy+sh}
+                nw: {
+                    x: sx,
+                    y: sy
+                },
+                ne: {
+                    x: sx + sw,
+                    y: sy
+                },
+                sw: {
+                    x: sx,
+                    y: sy + sh
+                },
+                se: {
+                    x: sx + sw,
+                    y: sy + sh
+                }
             };
             if (selectedObj.type === 'text') {
                 if (Math.abs(x - handles.se.x) < tolerance && Math.abs(y - handles.se.y) < tolerance) return 'se';
@@ -971,37 +1294,78 @@
         }
 
         function getHitCropHandle(x, y) {
-            const tolerance = 15 / view.scale; 
+            const tolerance = 15 / view.scale;
             const handles = {
-                nw: {x: crop.x, y: crop.y}, n: {x: crop.x + crop.w/2, y: crop.y}, ne: {x: crop.x + crop.w, y: crop.y},
-                e: {x: crop.x + crop.w, y: crop.y + crop.h/2}, se: {x: crop.x + crop.w, y: crop.y + crop.h},
-                s: {x: crop.x + crop.w/2, y: crop.y + crop.h}, sw: {x: crop.x, y: crop.y + crop.h}, w: {x: crop.x, y: crop.y + crop.h/2}
+                nw: {
+                    x: crop.x,
+                    y: crop.y
+                },
+                n: {
+                    x: crop.x + crop.w / 2,
+                    y: crop.y
+                },
+                ne: {
+                    x: crop.x + crop.w,
+                    y: crop.y
+                },
+                e: {
+                    x: crop.x + crop.w,
+                    y: crop.y + crop.h / 2
+                },
+                se: {
+                    x: crop.x + crop.w,
+                    y: crop.y + crop.h
+                },
+                s: {
+                    x: crop.x + crop.w / 2,
+                    y: crop.y + crop.h
+                },
+                sw: {
+                    x: crop.x,
+                    y: crop.y + crop.h
+                },
+                w: {
+                    x: crop.x,
+                    y: crop.y + crop.h / 2
+                }
             };
             for (const pos in handles) {
                 if (Math.abs(x - handles[pos].x) < tolerance && Math.abs(y - handles[pos].y) < tolerance) return pos;
             }
             return null;
         }
-        
+
         function pickColor(screenX, screenY) {
             const rect = canvas.getBoundingClientRect();
             const pixel = ctx.getImageData(screenX - rect.left, screenY - rect.top, 1, 1).data;
             const hex = "#" + ("000000" + ((pixel[0] << 16) | (pixel[1] << 8) | pixel[2]).toString(16)).slice(-6);
             if (selectedObj && ['rect', 'circle'].includes(selectedObj.type)) {
-                selectedObj.color = hex; updateToolbarForCurrentContext(); requestRender();
+                selectedObj.color = hex;
+                updateToolbarForCurrentContext();
+                requestRender();
             } else {
-                settings.rect.color = hex; settings.circle.color = hex; settings.text.color = hex;
+                settings.rect.color = hex;
+                settings.circle.color = hex;
+                settings.text.color = hex;
             }
         }
 
         // --- 渲染引擎 ---
         let renderRequested = false;
+
         function requestRender() {
-            if (!renderRequested) { renderRequested = true; requestAnimationFrame(() => { render(); renderRequested = false; }); }
+            if (!renderRequested) {
+                renderRequested = true;
+                requestAnimationFrame(() => {
+                    render();
+                    renderRequested = false;
+                });
+            }
         }
 
         function drawCommands(targetCtx, activeHistory, currentPendingCmd) {
-            targetCtx.lineCap = 'round'; targetCtx.lineJoin = 'round';
+            targetCtx.lineCap = 'round';
+            targetCtx.lineJoin = 'round';
             const cmdsToDraw = [...activeHistory];
             if (currentPendingCmd) cmdsToDraw.push(currentPendingCmd);
 
@@ -1009,28 +1373,34 @@
                 if (editingTextObj && cmd.id === editingTextObj.id) continue;
 
                 targetCtx.globalCompositeOperation = cmd.type === 'erase' ? 'destination-out' : 'source-over';
-                
+
                 if (cmd.type === 'text') {
                     if (cmd.img) targetCtx.drawImage(cmd.img, cmd.x, cmd.y, cmd.w * cmd.scale, cmd.h * cmd.scale);
                     continue;
                 }
 
-                targetCtx.strokeStyle = cmd.color; targetCtx.fillStyle = cmd.color; targetCtx.lineWidth = cmd.lineWidth;
+                targetCtx.strokeStyle = cmd.color;
+                targetCtx.fillStyle = cmd.color;
+                targetCtx.lineWidth = cmd.lineWidth;
 
                 if (cmd.type === 'rect') {
-                    const x = cmd.w < 0 ? cmd.x + cmd.w : cmd.x; const y = cmd.h < 0 ? cmd.y + cmd.h : cmd.y;
-                    const w = Math.abs(cmd.w), h = Math.abs(cmd.h);
+                    const x = cmd.w < 0 ? cmd.x + cmd.w : cmd.x;
+                    const y = cmd.h < 0 ? cmd.y + cmd.h : cmd.y;
+                    const w = Math.abs(cmd.w),
+                        h = Math.abs(cmd.h);
                     targetCtx.beginPath();
                     if (cmd.borderRadius > 0 && targetCtx.roundRect) {
                         targetCtx.roundRect(x, y, w, h, cmd.borderRadius);
                     } else {
                         targetCtx.rect(x, y, w, h);
                     }
-                    if (cmd.style === 'fill') targetCtx.fill(); else targetCtx.stroke();
+                    if (cmd.style === 'fill') targetCtx.fill();
+                    else targetCtx.stroke();
                 } else if (cmd.type === 'circle') {
                     targetCtx.beginPath();
-                    targetCtx.ellipse(cmd.x + cmd.w/2, cmd.y + cmd.h/2, Math.abs(cmd.w/2), Math.abs(cmd.h/2), 0, 0, Math.PI * 2);
-                    if (cmd.style === 'fill') targetCtx.fill(); else targetCtx.stroke();
+                    targetCtx.ellipse(cmd.x + cmd.w / 2, cmd.y + cmd.h / 2, Math.abs(cmd.w / 2), Math.abs(cmd.h / 2), 0, 0, Math.PI * 2);
+                    if (cmd.style === 'fill') targetCtx.fill();
+                    else targetCtx.stroke();
                 } else if (cmd.type === 'erase' && cmd.points.length > 1) {
                     targetCtx.beginPath();
                     targetCtx.moveTo(cmd.points[0].x, cmd.points[0].y);
@@ -1045,25 +1415,37 @@
             if (!img) return;
 
             // 1. 繪製裁切後的原圖
-            ctx.save(); ctx.translate(view.panX, view.panY); ctx.scale(view.scale, view.scale);
-            ctx.beginPath(); ctx.rect(crop.x, crop.y, crop.w, crop.h); ctx.clip();
-            ctx.drawImage(img, 0, 0); ctx.restore(); 
+            ctx.save();
+            ctx.translate(view.panX, view.panY);
+            ctx.scale(view.scale, view.scale);
+            ctx.beginPath();
+            ctx.rect(crop.x, crop.y, crop.w, crop.h);
+            ctx.clip();
+            ctx.drawImage(img, 0, 0);
+            ctx.restore();
 
             // 2. 準備離線畫布(依歷史紀錄依序繪製)
             if (offCanvas.width !== canvas.width || offCanvas.height !== canvas.height) {
-                offCanvas.width = canvas.width; offCanvas.height = canvas.height;
+                offCanvas.width = canvas.width;
+                offCanvas.height = canvas.height;
             }
             offCtx.clearRect(0, 0, offCanvas.width, offCanvas.height);
-            offCtx.save(); offCtx.translate(view.panX, view.panY); offCtx.scale(view.scale, view.scale);
+            offCtx.save();
+            offCtx.translate(view.panX, view.panY);
+            offCtx.scale(view.scale, view.scale);
             const activeHistory = historyStep >= 0 ? history.slice(0, historyStep + 1) : [];
             drawCommands(offCtx, activeHistory, currentCmd);
             offCtx.restore();
 
             // 3. 套用裁切遮罩並合成到主畫布上
-            ctx.save(); ctx.beginPath();
-            const scX = crop.x * view.scale + view.panX; const scY = crop.y * view.scale + view.panY;
-            ctx.rect(scX, scY, crop.w * view.scale, crop.h * view.scale); ctx.clip();
-            ctx.drawImage(offCanvas, 0, 0); ctx.restore();
+            ctx.save();
+            ctx.beginPath();
+            const scX = crop.x * view.scale + view.panX;
+            const scY = crop.y * view.scale + view.panY;
+            ctx.rect(scX, scY, crop.w * view.scale, crop.h * view.scale);
+            ctx.clip();
+            ctx.drawImage(offCanvas, 0, 0);
+            ctx.restore();
 
             // 4. UI: 裁切與選取框
             if (currentTool === 'crop') drawCropUI();
@@ -1072,31 +1454,59 @@
 
         function drawSelectionUI() {
             if (!selectedObj || (editingTextObj && selectedObj.id === editingTextObj.id)) return;
-            ctx.save(); ctx.translate(view.panX, view.panY); ctx.scale(view.scale, view.scale);
+            ctx.save();
+            ctx.translate(view.panX, view.panY);
+            ctx.scale(view.scale, view.scale);
 
             let x, y, w, h;
             if (selectedObj.type === 'text') {
-                x = selectedObj.x; y = selectedObj.y; w = selectedObj.w * selectedObj.scale; h = selectedObj.h * selectedObj.scale;
+                x = selectedObj.x;
+                y = selectedObj.y;
+                w = selectedObj.w * selectedObj.scale;
+                h = selectedObj.h * selectedObj.scale;
             } else {
                 x = selectedObj.w < 0 ? selectedObj.x + selectedObj.w : selectedObj.x;
                 y = selectedObj.h < 0 ? selectedObj.y + selectedObj.h : selectedObj.y;
-                w = Math.abs(selectedObj.w); h = Math.abs(selectedObj.h);
+                w = Math.abs(selectedObj.w);
+                h = Math.abs(selectedObj.h);
             }
 
             // 外框
-            ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2 / view.scale;
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2 / view.scale;
             ctx.setLineDash([5 / view.scale, 5 / view.scale]);
             ctx.strokeRect(x, y, w, h);
 
             // 控制點 (文字僅顯示右下角)
-            ctx.setLineDash([]); ctx.fillStyle = '#fff';
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#fff';
             const handleSize = 10 / view.scale;
-            const handles = selectedObj.type === 'text' 
-                ? [{hx: x+w, hy: y+h}] 
-                : [{hx: x, hy: y}, {hx: x+w, hy: y}, {hx: x, hy: y+h}, {hx: x+w, hy: y+h}];
+            const handles = selectedObj.type === 'text' ? [{
+                hx: x + w,
+                hy: y + h
+            }] : [{
+                hx: x,
+                hy: y
+            }, {
+                hx: x + w,
+                hy: y
+            }, {
+                hx: x,
+                hy: y + h
+            }, {
+                hx: x + w,
+                hy: y + h
+            }];
 
-            for (let {hx, hy} of handles) {
-                ctx.beginPath(); ctx.arc(hx, hy, handleSize/2, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+            for (let {
+                    hx,
+                    hy
+                }
+                of handles) {
+                ctx.beginPath();
+                ctx.arc(hx, hy, handleSize / 2, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
             }
             ctx.restore();
         }
@@ -1104,40 +1514,86 @@
         function drawCropUI() {
             ctx.save();
             const sc = imageToCanvas(crop.x, crop.y);
-            const sw = crop.w * view.scale; const sh = crop.h * view.scale;
+            const sw = crop.w * view.scale;
+            const sh = crop.h * view.scale;
             ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-            ctx.fillRect(0, 0, canvas.width, sc.y); ctx.fillRect(0, sc.y + sh, canvas.width, canvas.height - (sc.y + sh));
-            ctx.fillRect(0, sc.y, sc.x, sh); ctx.fillRect(sc.x + sw, sc.y, canvas.width - (sc.x + sw), sh);
-            ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.strokeRect(sc.x, sc.y, sw, sh);
-            
-            ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1; ctx.beginPath();
-            ctx.moveTo(sc.x + sw/3, sc.y); ctx.lineTo(sc.x + sw/3, sc.y + sh); ctx.moveTo(sc.x + sw*2/3, sc.y); ctx.lineTo(sc.x + sw*2/3, sc.y + sh);
-            ctx.moveTo(sc.x, sc.y + sh/3); ctx.lineTo(sc.x + sw, sc.y + sh/3); ctx.moveTo(sc.x, sc.y + sh*2/3); ctx.lineTo(sc.x + sw, sc.y + sh*2/3);
+            ctx.fillRect(0, 0, canvas.width, sc.y);
+            ctx.fillRect(0, sc.y + sh, canvas.width, canvas.height - (sc.y + sh));
+            ctx.fillRect(0, sc.y, sc.x, sh);
+            ctx.fillRect(sc.x + sw, sc.y, canvas.width - (sc.x + sw), sh);
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(sc.x, sc.y, sw, sh);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(sc.x + sw / 3, sc.y);
+            ctx.lineTo(sc.x + sw / 3, sc.y + sh);
+            ctx.moveTo(sc.x + sw * 2 / 3, sc.y);
+            ctx.lineTo(sc.x + sw * 2 / 3, sc.y + sh);
+            ctx.moveTo(sc.x, sc.y + sh / 3);
+            ctx.lineTo(sc.x + sw, sc.y + sh / 3);
+            ctx.moveTo(sc.x, sc.y + sh * 2 / 3);
+            ctx.lineTo(sc.x + sw, sc.y + sh * 2 / 3);
             ctx.stroke();
 
-            const handles = [
-                {x: sc.x, y: sc.y}, {x: sc.x+sw/2, y: sc.y}, {x: sc.x+sw, y: sc.y},
-                {x: sc.x, y: sc.y+sh/2}, {x: sc.x+sw, y: sc.y+sh/2},
-                {x: sc.x, y: sc.y+sh}, {x: sc.x+sw/2, y: sc.y+sh}, {x: sc.x+sw, y: sc.y+sh}
+            const handles = [{
+                    x: sc.x,
+                    y: sc.y
+                }, {
+                    x: sc.x + sw / 2,
+                    y: sc.y
+                }, {
+                    x: sc.x + sw,
+                    y: sc.y
+                },
+                {
+                    x: sc.x,
+                    y: sc.y + sh / 2
+                }, {
+                    x: sc.x + sw,
+                    y: sc.y + sh / 2
+                },
+                {
+                    x: sc.x,
+                    y: sc.y + sh
+                }, {
+                    x: sc.x + sw / 2,
+                    y: sc.y + sh
+                }, {
+                    x: sc.x + sw,
+                    y: sc.y + sh
+                }
             ];
-            ctx.fillStyle = '#fff'; ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2;
-            handles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); });
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 2;
+            handles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+            });
             ctx.restore();
         }
 
         function exportImage() {
             if (!img) return;
             const expCanvas = document.createElement('canvas');
-            expCanvas.width = crop.w; expCanvas.height = crop.h;
+            expCanvas.width = crop.w;
+            expCanvas.height = crop.h;
             const expCtx = expCanvas.getContext('2d');
 
             expCtx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
 
             const offExpCanvas = document.createElement('canvas');
-            offExpCanvas.width = crop.w; offExpCanvas.height = crop.h;
+            offExpCanvas.width = crop.w;
+            offExpCanvas.height = crop.h;
             const offExpCtx = offExpCanvas.getContext('2d');
 
-            offExpCtx.save(); offExpCtx.translate(-crop.x, -crop.y);
+            offExpCtx.save();
+            offExpCtx.translate(-crop.x, -crop.y);
             const activeHistory = historyStep >= 0 ? history.slice(0, historyStep + 1) : [];
             drawCommands(offExpCtx, activeHistory, null);
             offExpCtx.restore();
@@ -1146,10 +1602,12 @@
 
             const link = document.createElement('a');
             link.download = `edited_${Date.now()}.png`;
-            link.href = expCanvas.toDataURL('image/png', 1.0); link.click();
+            link.href = expCanvas.toDataURL('image/png', 1.0);
+            link.click();
         }
 
         init();
     </script>
 </body>
+
 </html>
