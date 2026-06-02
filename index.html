@@ -125,7 +125,10 @@
                 <input type="file" id="upload-img" accept="image/*" class="hidden">
             </label>
             <button id="btn-export" class="flex items-center gap-2 bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 px-3 py-1.5 rounded text-sm font-medium transition disabled:opacity-50 whitespace-nowrap" disabled>
-                <i class="ph ph-download-simple text-lg"></i> 匯出高畫質
+                <i class="ph ph-download-simple text-lg"></i> 下載
+            </button>
+            <button id="btn-copy" class="flex items-center gap-2 bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 px-3 py-1.5 rounded text-sm font-medium transition disabled:opacity-50 whitespace-nowrap" disabled>
+                <i class="ph ph-copy-simple text-lg"></i> 複製
             </button>
             <div class="w-px h-6 bg-gray-300 dark:bg-zinc-700 mx-2"></div>
             <button id="btn-undo" class="tool-btn hover:bg-gray-200 dark:hover:bg-zinc-700" title="往回一步 (Ctrl+Z)" disabled><i class="ph ph-arrow-u-up-left text-xl"></i></button>
@@ -439,6 +442,7 @@
             document.getElementById('upload-img').addEventListener('change', handleImageUpload);
             document.getElementById('upload-font').addEventListener('change', handleFontUpload);
             document.getElementById('btn-export').addEventListener('click', exportImage);
+            document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
             document.getElementById('btn-undo').addEventListener('click', undo);
             document.getElementById('btn-redo').addEventListener('click', redo);
             document.getElementById('btn-eyedropper').addEventListener('click', () => setTool('eyedropper'));
@@ -1651,6 +1655,56 @@
         }
 
         init();
+        // === 新增：複製圖片到剪貼簿 ===
+        async function copyToClipboard() {
+            if (!img) return;
+
+            const expCanvas = document.createElement('canvas');
+            expCanvas.width = crop.w;
+            expCanvas.height = crop.h;
+            const expCtx = expCanvas.getContext('2d');
+
+            // 繪製原圖
+            expCtx.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, crop.w, crop.h);
+
+            // 繪製所有繪圖物件
+            const offExpCanvas = document.createElement('canvas');
+            offExpCanvas.width = crop.w;
+            offExpCanvas.height = crop.h;
+            const offExpCtx = offExpCanvas.getContext('2d');
+
+            offExpCtx.save();
+            offExpCtx.translate(-crop.x, -crop.y);
+            const activeHistory = historyStep >= 0 ? history.slice(0, historyStep + 1) : [];
+            drawCommands(offExpCtx, activeHistory, null);
+            offExpCtx.restore();
+
+            expCtx.drawImage(offExpCanvas, 0, 0);
+
+            // 轉成 Blob 並複製到剪貼簿
+            try {
+                expCanvas.toBlob(async (blob) => {
+                    if (!blob) return;
+
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            'image/png': blob
+                        })
+                    ]);
+
+                    // 簡單提示（可自行美化）
+                    const originalText = document.getElementById('btn-copy').innerHTML;
+                    document.getElementById('btn-copy').innerHTML = `<i class="ph ph-check text-lg"></i> 已複製`;
+
+                    setTimeout(() => {
+                        document.getElementById('btn-copy').innerHTML = originalText;
+                    }, 1500);
+                }, 'image/png', 1.0);
+            } catch (err) {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請確認瀏覽器權限');
+            }
+        }
     </script>
 </body>
 
