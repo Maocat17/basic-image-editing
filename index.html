@@ -500,6 +500,50 @@
             });
 
             setTool('select');
+            // === 新增：支援 Ctrl + V 從剪貼簿貼上圖片 ===
+            window.addEventListener('paste', async (e) => {
+                if (!e.clipboardData || !e.clipboardData.items) return;
+
+                // 尋找圖片資料
+                for (let item of e.clipboardData.items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const blob = item.getAsFile();
+                        if (blob) {
+                            e.preventDefault(); // 防止預設貼上行為
+
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                                const newImg = new Image();
+                                newImg.onload = () => {
+                                    img = newImg;
+                                    originalImgWidth = img.width;
+                                    originalImgHeight = img.height;
+                                    crop = {
+                                        x: 0,
+                                        y: 0,
+                                        w: img.width,
+                                        h: img.height
+                                    };
+                                    history = [];
+                                    historyStep = -1;
+                                    selectedObj = null;
+                                    editingTextObj = null;
+
+                                    fitToScreen();
+                                    updateSysUI();
+                                    requestRender();
+
+                                    // 可選：顯示提示
+                                    console.log('✅ 已從剪貼簿成功貼上圖片');
+                                };
+                                newImg.src = event.target.result;
+                            };
+                            reader.readAsDataURL(blob);
+                            return; // 只處理第一張圖片
+                        }
+                    }
+                }
+            });
         }
 
         function resizeCanvas() {
