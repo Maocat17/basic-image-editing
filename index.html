@@ -698,6 +698,7 @@
             document.getElementById('btn-redo').disabled = historyStep >= history.length - 1;
             const hasImg = !!img;
             document.getElementById('btn-export').disabled = !hasImg;
+            document.getElementById('btn-copy').disabled = !hasImg; // ← 新增這一行 
             document.getElementById('welcome-msg').style.display = hasImg ? 'none' : 'flex';
             document.getElementById('zoom-val').textContent = Math.round(view.scale * 100) + '%';
         }
